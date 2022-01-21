@@ -6,13 +6,13 @@ if(isset($_GET["opcao"]) && isset($_GET["funcao"]))
         switch($_GET["opcao"])
         {
             case "aluno":
-                header("location: cadastrar\cadaluno.html");       
+                header("location: cadastrar\cadaluno.php");       
             break;
             case "curso":
-                header("location: cadastrar\cadcurso.html");
+                header("location: cadastrar\cadcurso.php");
             break;
             case "disciplina":
-                header("location: cadastrar\caddisc.html");
+                header("location: cadastrar\caddisc.php");
             break;
         }
     }
