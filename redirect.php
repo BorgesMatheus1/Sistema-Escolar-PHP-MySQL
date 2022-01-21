@@ -21,13 +21,13 @@ if(isset($_GET["opcao"]) && isset($_GET["funcao"]))
         switch($_GET["opcao"])
         {
             case "aluno":
-                header("location: alunos.php");
+                header("location: pesquisar\alunos.php");
             break;
             case "curso":
-                header("location: cursos.php");
+                header("location: pesquisar\cursos.php");
             break;
             case "disciplina":
-                header("location: disciplinas.php");
+                header("location: pesquisar\disciplinas.php");
             break;
         }
     }

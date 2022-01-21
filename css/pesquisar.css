@@ -16,3 +16,10 @@ h3
     margin: 0;
     margin-bottom: 5px;
 }
+.links{
+    margin: 40px;
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
