@@ -1,29 +1,3 @@
-<?php
-$msg = null;
-$invalid = true;
-
-if (isset($_POST['cadastrar']))
-{
-    include "getinput.php";
-
-    $cod = getInput('cod');
-    $nome = getInput('nome');
-
-
-    include "..\conection.php";
-
-    $query = "INSERT INTO disciplinas(coddisciplina, nome) VALUES('$cod', '$nome');";
-
-    if(!$invalid && mysqli_query($conn, $query))
-    {
-        $msg = "Cadastro realizado!.";
-    }
-    else
-    {
-        $msg = "Erro no cadastro! Confira os dados e tente novamente...";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -34,24 +8,53 @@ if (isset($_POST['cadastrar']))
     <title>Sistema Escolar</title>
 </head>
 <body>
+
+<?php
+$cod = $nome = "";
+$msg = "";
+$erro = 0;
+
+if ($_SERVER['REQUEST_METHOD'] == "POST")
+{
+    include "testInput.php";
+
+    $cod = test_input($_POST['cod']);
+    $nome = test_input($_POST['nome']);
+
+    if($erro == 0)
+    {
+        include "..\conection.php";
+
+        $query = "INSERT INTO disciplinas(coddisciplina, nome) VALUES('$cod', '$nome');";
+        $result = mysqli_query($conn, $query);
+
+        $msg = $result?"Cadastro realizado!":"Dados duplicados ou inválidos.";
+    }
+    else
+    {
+        $msg = "Campos vazios não são permitidos.";
+    }
+}
+?>
+
 <h1>Sistema Escolar</h1>
 
     <form action="caddisc.php" method="post">
         <fieldset>
             <legend>Cadastro de Disciplinas</legend>
             <div>
-                <label for="cod">Código da Disciplina</label>
-                <input type="text" name="cod" id="cod">
+                <label>Código da Disciplina</label>
+                <input type="text" name="cod" placeholder="Código" value="<?php echo $cod?>">
             </div>
             <div>
-                <label for="nome">Nome da Disciplina</label>
-                <input type="text" name="nome" id="nome">
+                <label>Nome da Disciplina</label>
+                <input type="text" name="nome" placeholder="Nome" value="<?php echo $nome?>">
             </div>
-            <button type="submit" name="cadastrar">Cadastrar</button>
+            <button type="submit">Cadastrar</button>
         </fieldset>
     </form>
     <?php
-        if (!$msg == null)
+        if (!empty($msg))
         {
             echo"<fieldset><p>$msg</p></fieldset>";
         }

@@ -1,30 +1,3 @@
-<?php
-$msg = null;
-$invalid = true;
-
-if (isset($_POST['cadastrar']))
-{
-    include 'getinput.php';
-    $matricula = getinput('matricula');
-    $nome = getinput('nome');
-    $endereco = getinput('endereco');
-    $cidade = getinput('cidade');
-    $codCurso = getinput('codCurso');
-
-    include "..\conection.php";
-
-    $query = "INSERT INTO alunos(matricula, nome, endereco, cidade, codcurso) VALUES('$matricula', '$nome', '$endereco', '$cidade', '$codCurso');";
-    
-    if(!$invalid && mysqli_query($conn, $query))
-    {
-        $msg = "Cadastro realizado!.";
-    }
-    else
-    {
-        $msg = "Erro no cadastro! Confira os dados e tente novamente...";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -35,37 +8,69 @@ if (isset($_POST['cadastrar']))
     <title>Sistema Escolar</title>
 </head>
 <body>
+
+<?php
+$matricula = $nome = $endereco = $cidade = $codCurso = "";
+$msg = "";
+$erro = 0;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    include 'testInput.php';
+
+    $matricula = test_input($_POST['matricula']);
+    $nome = test_input($_POST['nome']);
+    $endereco = test_input($_POST['endereco']);
+    $cidade = test_input($_POST['cidade']);
+    $codCurso = test_input($_POST['codCurso']);
+
+    if ($erro == 0)
+    {
+        include "..\conection.php";
+        
+        $query = "INSERT INTO alunos(matricula, nome, endereco, cidade, codcurso) VALUES('$matricula', '$nome', '$endereco', '$cidade', '$codCurso');";
+        $result = mysqli_query($conn, $query);
+
+        $msg = $result?"Cadastro realizado!":"Dados duplicados ou inválidos.";
+    }
+    else
+    {
+        $msg = "Campos vazios não são permitidos.";
+    }
+}
+?>
+
 <h1>Sistema Escolar</h1>
 
     <form action="cadaluno.php" method="post">
         <fieldset>
             <legend>Cadastro de Alunos</legend>
             <div>
-                <label for="matricula">Matrícula</label>
-                <input type="text" name="matricula" id="matricula">
+                <label>Matrícula</label>
+                <input type="text" name="matricula" placeholder="Matricula" value="<?php echo $matricula;?>">
             </div>
             <div>
-                <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome">
+                <label>Nome</label>
+                <input type="text" name="nome" placeholder="Nome" value="<?php echo $nome;?>">
             </div>
             <div>
-                <label for="endereco">Endereço</label>
-                <input type="text" name="endereco" id="endereco">
+                <label>Endereço</label>
+                <input type="text" name="endereco" placeholder="Endereco" value="<?php echo $endereco;?>">
             </div>
              <div>
-                <label for="cidade">Cidade</label>
-                <input type="text" name="cidade" id="cidade">
+                <label>Cidade</label>
+                <input type="text" name="cidade" placeholder="Cidade" value="<?php echo $cidade;?>">
             </div>
              <div>
-                <label for="codCurso">Código do Curso</label>
-                <input type="text" name="codCurso" id="codCurso">
+                <label>Código do Curso</label>
+                <input type="text" name="codCurso" placeholder="Curso" value="<?php echo $codCurso;?>">
             </div>
-            <button type="submit" name="cadastrar">Cadastrar</button>
+            <button type="submit">Cadastrar</button>
         </fieldset>
         <?php
-            if (!$msg == null)
+            if (!empty($msg))
             {
-                echo"<fieldset><p>$msg</p></fieldset>";
+            echo"<fieldset><p>$msg</p></fieldset>";
             }
         ?>
     </form>
