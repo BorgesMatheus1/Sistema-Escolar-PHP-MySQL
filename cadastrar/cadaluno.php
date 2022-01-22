@@ -1,17 +1,21 @@
 <?php
 $msg = null;
+$invalid = true;
+
 if (isset($_POST['cadastrar']))
 {
-    $matricula = isset($_POST['matricula'])?$_POST['matricula']:null;
-    $nome = isset($_POST['nome'])?$_POST['nome']:null;
-    $endereco = isset($_POST['endereco'])?$_POST['endereco']:null;
-    $cidade = isset($_POST['cidade'])?$_POST['cidade']:null;
-    $codCurso = isset($_POST['codCurso'])?$_POST['codCurso']:null;
+    include 'getinput.php';
+    $matricula = getinput('matricula');
+    $nome = getinput('nome');
+    $endereco = getinput('endereco');
+    $cidade = getinput('cidade');
+    $codCurso = getinput('codCurso');
 
     include "..\conection.php";
 
     $query = "INSERT INTO alunos(matricula, nome, endereco, cidade, codcurso) VALUES('$matricula', '$nome', '$endereco', '$cidade', '$codCurso');";
-    if(mysqli_query($conn, $query))
+    
+    if(!$invalid && mysqli_query($conn, $query))
     {
         $msg = "Cadastro realizado!.";
     }
